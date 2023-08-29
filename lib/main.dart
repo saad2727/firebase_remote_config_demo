@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config_demo/firebase_notification_message/firebase_notification_messaging.dart';
 import 'package:firebase_remote_config_demo/remote_config/firebase_remote_config_service.dart';
 
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ void main() async {
     await remoteConfig
         .setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(seconds: 1),
+      minimumFetchInterval: const Duration(hours: 1),
     ))
         .whenComplete(() async {
       await remoteConfig.fetch().whenComplete(() async {
@@ -33,6 +34,7 @@ void main() async {
       });
     });
   });
+  await FirebaseNotificationMessageing().initNotification();
 }
 
 class MyApp extends StatelessWidget {
@@ -41,18 +43,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
-      body: SafeArea(
-        child: ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: FirebaseRemoteConfigService.remoteModel.length,
-            itemBuilder: ((context, index) {
-            
-              return Text(
-                  FirebaseRemoteConfigService.remoteModel[index].id.toString());
-            })),
-      ),
-    ));
+          body: SafeArea(
+            child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: FirebaseRemoteConfigService.remoteModel.length,
+                itemBuilder: ((context, index) {
+                  return Text(FirebaseRemoteConfigService.remoteModel[index].id
+                      .toString());
+                })),
+          ),
+        ));
   }
 }
